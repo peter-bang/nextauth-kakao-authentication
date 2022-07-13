@@ -2,8 +2,10 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { Container } from "@mui/material";
 import tw, { styled } from "twin.macro";
-import React, { ReactElement, ReactNode } from "react";
+import React, { ReactElement, ReactNode, useEffect, useState } from "react";
 import Layout from "../components/Layout";
+import LoginButtonBox from "../components/Mybutton";
+import { useSession } from "next-auth/react";
 
 export const getServerSideProps = async () => {
   const res = await fetch("http://localhost:3000/api/hello");
@@ -25,6 +27,10 @@ type NextPageWithLayout<T> = NextPage<T> & {
 const MainContainer = styled(Container)(() => [tw`text-center`]);
 
 const Home: NextPageWithLayout<{ name: string }> = ({ name }) => {
+  const { data, status } = useSession();
+  useEffect(() => {
+    console.log(JSON.stringify(data?.user), status);
+  }, [data]);
   return (
     <MainContainer>
       <Head>
@@ -34,6 +40,7 @@ const Home: NextPageWithLayout<{ name: string }> = ({ name }) => {
       </Head>
       <main>
         <h1>안녕 여러분!!</h1>
+        <LoginButtonBox />
       </main>
     </MainContainer>
   );
